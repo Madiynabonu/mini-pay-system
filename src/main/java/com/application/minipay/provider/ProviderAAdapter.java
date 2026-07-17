@@ -1,6 +1,7 @@
 package com.application.minipay.provider;
 
 import com.application.minipay.enums.Status;
+import com.application.minipay.exceptions.ProviderCommunicationException;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,7 +23,7 @@ public class ProviderAAdapter implements ProviderPlugin {
             return new ProviderChargeResult(Status.SUCCESS, UUID.randomUUID().toString(), null);
 
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new ProviderCommunicationException("Provider A bilan bog'lanishda xatolik", e);
         }
 
     }
