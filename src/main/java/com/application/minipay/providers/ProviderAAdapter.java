@@ -1,11 +1,13 @@
-package com.application.minipay.provider;
+package com.application.minipay.providers;
 
 import com.application.minipay.enums.Status;
 import com.application.minipay.exceptions.ProviderCommunicationException;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Component("PROVIDER_A")
 public class ProviderAAdapter implements ProviderPlugin {
     @Override
     public ProviderChargeResult charge(ProviderChargeRequest request) {

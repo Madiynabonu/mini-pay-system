@@ -1,4 +1,4 @@
-package com.application.minipay.provider;
+package com.application.minipay.providers;
 
 import com.application.minipay.enums.Currency;
 

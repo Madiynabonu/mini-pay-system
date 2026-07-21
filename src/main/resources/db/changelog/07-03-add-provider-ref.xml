@@ -4,7 +4,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="07-01-changelog.xml" relativeToChangelogFile="true"/>
-    <include file="07-02-seed-demo-data.xml" relativeToChangelogFile="true"/>
-    <include file="07-03-add-provider-ref.xml" relativeToChangelogFile="true"/>
+    <changeSet id="0" author="admin">
+        <addColumn tableName="transactions">
+            <column name="provider_ref" type="VARCHAR(255)">
+            <constraints unique="true"></constraints>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

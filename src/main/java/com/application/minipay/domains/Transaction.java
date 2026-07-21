@@ -51,8 +51,11 @@ public class Transaction {
 
     private Instant failureTimestamp;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String idempotencyKey;
+
+    @Column(unique = true, nullable = true)
+    private String providerRef;
 
     @Column(nullable = false)
     private Instant createdAt;

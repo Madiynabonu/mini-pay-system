@@ -24,7 +24,9 @@ public class WalletService {
 
         User user = userRepository.findByIdForUpdate(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+        if (amount.compareTo(new BigDecimal(0)) <= 0) {
+            throw new ValidationException("No debit");
+        } else if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValidationException("Amount must be positive");
         }
 
