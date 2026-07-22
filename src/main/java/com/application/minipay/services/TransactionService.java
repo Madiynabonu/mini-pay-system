@@ -1,4 +1,4 @@
-package com.application.minipay.service;
+package com.application.minipay.services;
 
 import com.application.minipay.domains.Provider;
 import com.application.minipay.domains.Transaction;

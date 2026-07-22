@@ -6,6 +6,7 @@ import com.application.minipay.exceptions.InsufficientBalanceException;
 import com.application.minipay.exceptions.UserNotFoundException;
 import com.application.minipay.exceptions.ValidationException;
 import com.application.minipay.repositories.UserRepository;
+import com.application.minipay.services.WalletService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

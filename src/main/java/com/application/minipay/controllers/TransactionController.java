@@ -2,7 +2,7 @@ package com.application.minipay.controllers;
 
 import com.application.minipay.dtos.TransactionRequestDTO;
 import com.application.minipay.dtos.TransactionResponseDTO;
-import com.application.minipay.service.TransactionService;
+import com.application.minipay.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
