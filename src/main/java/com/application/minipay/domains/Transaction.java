@@ -19,7 +19,6 @@ import java.util.UUID;
 @Builder
 public class Transaction {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
