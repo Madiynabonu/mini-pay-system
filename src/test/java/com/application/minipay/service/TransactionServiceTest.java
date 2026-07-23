@@ -12,6 +12,7 @@ import com.application.minipay.repositories.ProviderRepository;
 import com.application.minipay.repositories.TransactionRepository;
 import com.application.minipay.repositories.UserRepository;
 import com.application.minipay.services.ProviderResolver;
+import com.application.minipay.services.TransactionChargeResult;
 import com.application.minipay.services.TransactionService;
 import com.application.minipay.services.WalletService;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -66,9 +68,11 @@ class TransactionServiceTest {
         when(providerResolver.resolve("PROVIDER_A")).thenReturn(mockPlugin);
         when(mockPlugin.charge(any())).thenReturn(new ProviderChargeResult(Status.SUCCESS, "ref-123", null));
 
-        TransactionResponseDTO response = transactionService.charge(request, "key-1");
+        TransactionChargeResult result = transactionService.charge(request, "key-1");
+        TransactionResponseDTO response = result.transaction();
 
         assertEquals(Status.SUCCESS, response.getStatus());
+        assertTrue(result.isNewTransaction());
         verify(walletService, never()).credit(any(), any());
     }
 
@@ -95,10 +99,12 @@ class TransactionServiceTest {
         when(providerResolver.resolve("PROVIDER_A")).thenReturn(mockPlugin);
         when(mockPlugin.charge(any())).thenReturn(new ProviderChargeResult(Status.FAILED, null, "PROVIDER_DECLINED"));
 
-        TransactionResponseDTO response = transactionService.charge(request, "key-2");
+        TransactionChargeResult result = transactionService.charge(request, "key-2");
+        TransactionResponseDTO response = result.transaction();
 
         assertEquals(Status.FAILED, response.getStatus());
         assertEquals("PROVIDER_DECLINED", response.getFailureReason());
+        assertTrue(result.isNewTransaction());
         verify(walletService, times(1)).credit(new BigDecimal("5000"), userId);
     }
 
