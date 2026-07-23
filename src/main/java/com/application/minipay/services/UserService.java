@@ -49,7 +49,6 @@ public class UserService {
 
         return toDto(userRepository.save(
                 User.builder()
-                        .id(UUID.randomUUID())
                         .fullName(userRequest.getFullName())
                         .phone(userRequest.getPhone())
                         .balance(userRequest.getBalance())

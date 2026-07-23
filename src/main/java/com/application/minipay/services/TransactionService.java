@@ -13,6 +13,8 @@ import com.application.minipay.repositories.ProviderRepository;
 import com.application.minipay.repositories.TransactionRepository;
 import com.application.minipay.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,7 +33,7 @@ public class TransactionService {
     private final ProviderResolver providerResolver;
 
 
-    public TransactionResponseDTO charge(TransactionRequestDTO request, String idempotencyKey) {
+    public TransactionChargeResult charge(TransactionRequestDTO request, String idempotencyKey) {
 
         if (idempotencyKey == null || idempotencyKey.isEmpty()) {
             throw new ValidationException("idempotencyKey cannot be empty");
@@ -53,13 +55,12 @@ public class TransactionService {
 
         Optional<Transaction> existingTransaction = transactionRepository.findByIdempotencyKey(idempotencyKey);
         if (existingTransaction.isPresent()) {
-            return toResponseDTO(existingTransaction.get());
+            return new TransactionChargeResult(toResponseDTO(existingTransaction.get()), false);
         }
 
         walletService.debit(user.get().getId(), request.getAmount());
 
         Transaction transaction = Transaction.builder()
-                .id(UUID.randomUUID())
                 .user(user.get())
                 .provider(provider.get())
                 .serviceAccount(request.getServiceAccount())
@@ -96,7 +97,7 @@ public class TransactionService {
 
 
         transactionRepository.save(transaction);
-        return toResponseDTO(transaction);
+        return new TransactionChargeResult(toResponseDTO(transaction), true);
 
     }
 
@@ -130,5 +131,12 @@ public class TransactionService {
             throw new TransactionNotFoundException(transactionId);
         }
         return toResponseDTO(transaction.get());
+    }
+
+    public Page<TransactionResponseDTO> findTransactionsByUserIdWithPageable(UUID userId, Status status, Pageable pageable) {
+        Page<Transaction> transactions = status == null
+                ? transactionRepository.findAllByUserId(userId, pageable)
+                : transactionRepository.findAllByUserIdAndStatus(userId, status, pageable);
+        return transactions.map(TransactionService::toResponseDTO);
     }
 }

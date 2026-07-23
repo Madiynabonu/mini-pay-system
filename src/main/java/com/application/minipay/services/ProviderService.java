@@ -74,7 +74,6 @@ public class ProviderService {
 
 
         return Provider.builder()
-                .id(UUID.randomUUID())
                 .code(provider.getCode())
                 .name(provider.getName())
                 .active(provider.isActive())
